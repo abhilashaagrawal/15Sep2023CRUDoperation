@@ -32,6 +32,11 @@ function Createstudents() {
 
   //2.2 function defination area
 
+  let handleChange=(e)=>{
+    console.log(e.target.value);//returns the first selected value
+    // console.log(e.target.innerHTML);//returns the entire select option full
+  }
+
   let createStudent=()=>{
       // alert('ok');
       //now call the api if you have data
@@ -91,6 +96,35 @@ function Createstudents() {
       }
 
     }
+
+  let editStudent=(e)=>{
+    // alert('ok');
+    console.log(e.target.closest('tr').querySelector('td:first-child').innerHTML);
+    let eid=e.target.closest('tr').querySelector('td:first-child').innerHTML;
+
+    let payload={
+      "data": {
+        "name": document.getElementById('stuname').value,
+        "teachers": [
+          parseInt(document.getElementById('teacherid').value)
+        ]
+      }
+    }
+
+    fetch(`http://localhost:1337/api/students/${eid}`,{
+      method:"PUT",
+      headers:{
+        'Content-Type':"application/json"
+      },
+      body:JSON.stringify(payload)
+    })
+    .then((res)=>{return res.json()})
+    .then((data)=>{
+      console.log(data)
+    })
+    .catch()
+    
+  }
    
 
 
@@ -101,7 +135,7 @@ function Createstudents() {
         <h1 className='text-center mt-5'>Createstudents</h1>
         <form>
           <label htmlFor="stuname" className="form-label">Select Teacher</label>
-          <select className="form-select" id='teacherid' aria-label="Default select example">
+          <select className="form-select" id='teacherid' aria-label="Default select example" multiple onChange={(e)=>{handleChange(e)}}>
             {
               teacher.map((cv,index,arr)=>{
                 return <option key={index} value={cv.id} select="true">{cv.attributes.name}</option>
@@ -146,7 +180,7 @@ function Createstudents() {
                           </td>
                           <td>
                             <Button className='btn btn-primary btn-sm'>View</Button>
-                            <Button className='btn btn-success btn-sm ms-2'>Edit</Button>
+                            <Button  className='btn btn-success btn-sm ms-2' onClick={(e)=>{editStudent(e)}}>Edit</Button>
                             <Button id={`sid${cv.id}`} className='btn btn-danger btn-sm ms-2' onClick={(e)=>{deleteStudent(e)}}>Delete</Button>
                           </td>
                         </tr>
