@@ -11,7 +11,7 @@ function Createstudents() {
 
   // i want to call the api after page load
   useEffect(()=>{
-    fetch(`http://localhost:1337/api/students`,{method:"GET"})
+    fetch(`http://localhost:1337/api/students?populate=*`,{method:"GET"})
     .then((res)=>{return res.json()})
     .then((data)=>{
       console.log('Student--->',data.data)
@@ -53,6 +53,17 @@ function Createstudents() {
         .then((res)=>{return res.json()})
         .then((data)=>{
           alert('Student inserted Successfully');
+          // window.location.reload();
+          document.querySelector('table >tbody').innerHTML+=`<tr>
+                                                                <td></td>
+                                                                <td>${document.getElementById('stuname').value}</td>
+                                                                <td>${document.getElementById('teacherid').value.innerHTML}</td>
+                                                                <td>
+                                                                  <Button class='btn btn-primary btn-sm'>View</Button>
+                                                                  <Button class='btn btn-success btn-sm ms-2'>Edit</Button>
+                                                                  <Button id="" class='btn btn-danger btn-sm ms-2'>Delete</Button>
+                                                                </td>
+                                                              </tr>`;
           console.log(data)
         })
         .catch()
@@ -115,6 +126,7 @@ function Createstudents() {
             <tr>
               <th>ID</th>
               <th>Student Name</th>
+              <th>Teacher Name</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -124,6 +136,14 @@ function Createstudents() {
                 return <tr>
                           <td>{cv.id}</td>
                           <td>{cv.attributes.name}</td>
+                          <td>
+                              {
+                                // (console.log('trcg',cv.attributes.teachers.data))
+                                cv.attributes.teachers.data.map((cv2,index2,arr2)=>{
+                                  return cv2.attributes.name
+                                }).toString()
+                              }
+                          </td>
                           <td>
                             <Button className='btn btn-primary btn-sm'>View</Button>
                             <Button className='btn btn-success btn-sm ms-2'>Edit</Button>
